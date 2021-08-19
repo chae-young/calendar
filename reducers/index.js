@@ -10,6 +10,9 @@ const initialState = {
   currentInfoLoading: false,
   currentInfoDone: false,
   currentInfoFail: false,
+  colorSelectLoading: false,
+  colorSelectDone: false,
+  colorSelectFail: false,
   nowDay: null,
   currentPost: null,
   writePopupOpen: false,
@@ -20,8 +23,10 @@ const initialState = {
     //     weekDay:null,
     //     text:[],
     //     desc:[],
+    //
     // }
   ],
+  Color: "",
 }
 
 export const DAY_REQUEST = "DAY_REQUEST"
@@ -36,13 +41,12 @@ export const CURRENT_INFO_REQUEST = "CURRENT_INFO_REQUEST"
 export const CURRENT_INFO_SUCCESS = "CURRENT_INFO_SUCCESS"
 export const CURRENT_INFO_FAIL = "CURRENT_INFO_FAIL"
 
+export const COLOR_SELECT_REQUEST = "COLOR_SELECT_REQUEST"
+export const COLOR_SELECT_SUCCESS = "COLOR_SELECT_SUCCESS"
+export const COLOR_SELECT_FAIL = "COLOR_SELECT_FAIL"
+
 export const WRITE_POPUP_OPEN = "WRITE_POPUP_OPEN"
 export const WRITE_POPUP_CLOSE = "WRITE_POPUP_CLOSE"
-
-export const listAddAction = (data) => ({
-  type: LIST_ADD_REQUEST,
-  data,
-})
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -87,15 +91,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         listAddLoading: false,
         listAddDone: true,
-        postList: [
-          ...state.postList,
-          {
-            ...action.data,
-            title: action.data.title.trim().length
-              ? action.data.title
-              : "제목없음",
-          },
-        ],
+        postList: [...state.postList, ...action.data],
       }
     }
     case LIST_ADD_FAIL:

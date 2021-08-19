@@ -17,7 +17,7 @@ const Popup = styles.div`
     box-shadow: 0px 6px 18px 4px #666666;    
 `
 const Day = ({ day, select, selected }) => {
-  const { date, daymonth, isCurrentMonth, isToday, number } = day
+  const { date, daymonth, isCurrentMonth, isToday, number, year, format } = day
   const { postList, listAddDone } = useSelector((state) => state)
 
   const [moreClick, setMoreClick] = useState(false)
@@ -30,6 +30,11 @@ const Day = ({ day, select, selected }) => {
     console.log(currentList)
     setEditPopup(true)
   }
+
+  const currentDate = postList.find(
+    (v) => v.format === date.format("YYYY-MM-DD"),
+  )
+  console.log("날짜", currentDate)
 
   const renderList = useCallback(() => {
     const postListArr = []
@@ -65,7 +70,10 @@ const Day = ({ day, select, selected }) => {
     <>
       <Col
         key={date.toString()}
-        style={{ height: "calc((100vh - 48px)/6)", position: "relative" }}
+        style={{
+          height: "calc((100vh - 48px)/6)",
+          position: "relative",
+        }}
         className={`day${isToday ? " today" : ""}${
           isCurrentMonth ? "" : " different-month"
         }${date.isSame(selected) ? " selected" : ""}`}
@@ -73,6 +81,10 @@ const Day = ({ day, select, selected }) => {
           select(day, e)
         }}
       >
+        {currentDate && (
+          <div style={{ backgroundColor: `${currentDate.bgColor}` }} />
+        )}
+
         {number}
         <ul>{renderList().postListArr}</ul>
         {more && (
