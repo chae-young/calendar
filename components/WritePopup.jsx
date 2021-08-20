@@ -49,23 +49,31 @@ const WritePopup = ({ style }) => {
       const setDate = dateDistance / (1000 * 60 * 60 * 24)
 
       let num
-      const currentDate = []
+      const currentDateArr = []
       for (let i = 0; i <= setDate; i++) {
         num = i >= 1 ? 1 : 0
         const alldate = new Date(startDate.setDate(startDate.getDate() + num))
-        currentDate.push(moment(alldate).format("YYYY-MM-DD"))
+        currentDateArr.push(alldate)
         // console.log("y", alldate.getFullYear())
         // console.log("m", alldate.getMonth())
         // console.log("day", alldate.getDate())
         // console.log(new Date(sectionDate.setDate(sectionDate.getDate() + num)))
       }
-      // console.log(endDate, startDate)
-      const arr = currentDate.map((v) => ({
-        id: postList.length,
-        format: v,
+      console.log(currentDateArr)
+      const arr = currentDateArr.map((v) => ({
+        // id: postList.length,
+        currentDate: moment(v).format("YYYY-MM-DD"),
+        startDate: moment(currentDateArr[0]).format("YYYY-MM-DD"),
+        endDate: moment(endDate).format("YYYY-MM-DD"),
+        date: {
+          daymonth: v.getMonth(),
+          number: v.getDate(),
+        },
         nowDay,
-        title,
-        desc,
+        content: {
+          title: title.trim().length ? title : "제목없음",
+          desc,
+        },
         bgColor,
         section: setDate,
       }))

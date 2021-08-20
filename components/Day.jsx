@@ -27,32 +27,28 @@ const Day = ({ day, select, selected }) => {
   const [currentList, setCurrentList] = useState()
   const onClickPop = (list, e) => {
     setCurrentList((prev) => ({ ...list }))
-    console.log(currentList)
     setEditPopup(true)
   }
 
-  const currentDate = postList.find(
-    (v) => v.format === date.format("YYYY-MM-DD"),
-  )
-  console.log("날짜", currentDate)
+  // const sectionDate = postList.find(
+  //   (v) => v.currentDate === date.format("YYYY-MM-DD"),
+  // )
 
-  const renderList = useCallback(() => {
-    const postListArr = []
-    const dayAllList = []
-    postList.forEach((v) => {
-      if (v.nowDay.daymonth === daymonth && v.nowDay.number === number) {
-        if (postListArr.length < 2) {
-          postListArr.push(
-            <DayList data={v} onClickPop={(list, e) => onClickPop(list, e)} />,
-          )
-        }
-        dayAllList.push(v)
-      }
-    })
-    return { postListArr, dayAllList }
-  }, [postList])
+  const sectionData = postList.filter((v) => {
+    if (v.bgColor && v.currentDate === date.format("YYYY-MM-DD")) {
+      return v
+    }
+  })
+  // 현재날 짜와 리스트의 날짜가 같으면 ..
+  const dateList = postList.filter((v) => {
+    const test = v.currentDate === v.startDate
+    if (test && v.startDate === date.format("YYYY-MM-DD")) {
+      return v
+    }
+  })
+  console.log(dateList, sectionData)
 
-  const more = renderList().dayAllList.length >= 3
+  const more = dateList.length >= 3
   const onClickMore = useCallback((e) => {
     // e.preventDefault();
     e.stopPropagation()
@@ -81,19 +77,27 @@ const Day = ({ day, select, selected }) => {
           select(day, e)
         }}
       >
-        {currentDate && (
-          <div style={{ backgroundColor: `${currentDate.bgColor}` }} />
-        )}
+        {sectionData.map((v) => (
+          <div
+            style={{
+              height: "10px",
+              backgroundColor: `${v.bgColor}`,
+            }}
+          />
+        ))}
 
         {number}
-        <ul>{renderList().postListArr}</ul>
+        <DayList
+          post={dateList}
+          onClickPop={(list, e) => onClickPop(list, e)}
+        />
+
         {more && (
           <Button onClick={onClickMore} variant="link">
-            {renderList().dayAllList.length - renderList().postListArr.length}개
-            더보기
+            {dateList.length - 2}개 더보기
           </Button>
         )}
-        {moreClick && <MoreListPopup list={renderList().dayAllList} />}
+        {moreClick && <MoreListPopup post={dateList} />}
         {editPopup && (
           <Popup style={style} onClick={(e) => e.stopPropagation()}>
             <EditPopup currentList={currentList} setEditPopup={setEditPopup} />

@@ -1,7 +1,7 @@
-import React,{useState,useEffect, useCallback} from 'react';
-import { X } from 'react-bootstrap-icons';
-import style from 'styled-components';
-import EditPopup from './EditPopup';
+import React, { useState, useEffect, useCallback } from "react"
+import { X } from "react-bootstrap-icons"
+import style from "styled-components"
+import EditPopup from "./EditPopup"
 
 const MoreListPopWrap = style.div`
     position:absolute;
@@ -20,23 +20,28 @@ const MoreListPopWrap = style.div`
     }
 `
 
-const MoreListPopup = ({list})=>{
-    const [editPopup,setEditPopup] = useState(false);
-    const [currentList,setCurrentList] = useState([]);
-    const onClickPop = (list)=>{
-        setCurrentList((prev)=>[list])
-        setModifyPop(true);
-    }
-    return (
-        <MoreListPopWrap onClick={(e)=>e.stopPropagation()}>
-            <strong>{list[0].weekDay}</strong>
-            <ul>
-                {list.map((v,i)=><li onClick={(list)=>onClickPop(v)}>{v.text}</li>)}
-            </ul>
-            <button><X/></button>
-            {editPopup && <EditPopup currentList={currentList}/>}
-        </MoreListPopWrap>
-    )
+const MoreListPopup = ({ post }) => {
+  console.log(post)
+  const [editPopup, setEditPopup] = useState(false)
+  const [currentList, setCurrentList] = useState([])
+  const onClickPop = (list) => {
+    setCurrentList((prev) => [list])
+    setModifyPop(true)
+  }
+  return (
+    <MoreListPopWrap onClick={(e) => e.stopPropagation()}>
+      {/* <strong>{list[0].weekDay}</strong> */}
+      <ul>
+        {post.map((v, i) => (
+          <li onClick={(post) => onClickPop(v)}>{v.content.title}</li>
+        ))}
+      </ul>
+      <button>
+        <X />
+      </button>
+      {editPopup && <EditPopup currentList={currentList} />}
+    </MoreListPopWrap>
+  )
 }
 
-export default MoreListPopup;
+export default MoreListPopup

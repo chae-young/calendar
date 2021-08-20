@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
 
-const DayList = ({ data, onClickPop }) => {
+const DayList = ({ post, onClickPop }) => {
   const { dayList } = useSelector((state) => state)
 
   return (
     <>
-      <li
-        onClick={(e) => {
-          e.stopPropagation()
-        }}
-      >
-        <button type="button" onClick={(e) => onClickPop(data, e)}>
-          {data.title}
-        </button>
-      </li>
+      <ul>
+        {post.map(
+          (v, i) =>
+            i < 2 && (
+              <li
+                onClick={(e) => {
+                  e.stopPropagation()
+                }}
+              >
+                <button type="button">{v.content.title}</button>
+                {/* onClick={(e) => onClickPop(data, e)} */}
+              </li>
+            ),
+        )}
+      </ul>
     </>
   )
 }

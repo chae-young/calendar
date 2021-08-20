@@ -23,6 +23,7 @@ const initialState = {
     //     weekDay:null,
     //     text:[],
     //     desc:[],
+    //     content:{}
     //
     // }
   ],
