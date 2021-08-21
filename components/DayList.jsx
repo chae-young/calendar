@@ -1,26 +1,28 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { useSelector } from "react-redux"
 
-const DayList = ({ post, onClickPop }) => {
+const DayList = ({ post, index, onClickPop }) => {
   const { dayList } = useSelector((state) => state)
 
+  const sectionVal = 7 - index
+  const sectionWidth =
+    sectionVal - post.section > 0 ? post.section + 1 : sectionVal
+
+  console.log(sectionVal, "ddddddd")
   return (
     <>
-      <ul>
-        {post.map(
-          (v, i) =>
-            i < 2 && (
-              <li
-                onClick={(e) => {
-                  e.stopPropagation()
-                }}
-              >
-                <button type="button">{v.content.title}</button>
-                {/* onClick={(e) => onClickPop(data, e)} */}
-              </li>
-            ),
-        )}
-      </ul>
+      <li
+        style={{
+          width: `calc(100% * ${sectionWidth})`,
+          backgroundColor: `${post.bgColor}`,
+        }}
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
+      >
+        <button type="button">{post.content.title}</button>
+        {/* onClick={(e) => onClickPop(data, e)} */}
+      </li>
     </>
   )
 }

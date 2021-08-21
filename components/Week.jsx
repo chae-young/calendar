@@ -15,6 +15,7 @@ const Week = ({ date, month, select, selected }) => {
       isCurrentMonth: date.month() === month.month(),
       isToday: date.isSame(new Date(), "day"),
       date,
+      index: i,
     }
     days.push(<Day day={day} selected={selected} select={select} />)
     date = date.clone()

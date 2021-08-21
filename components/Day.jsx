@@ -17,7 +17,7 @@ const Popup = styles.div`
     box-shadow: 0px 6px 18px 4px #666666;    
 `
 const Day = ({ day, select, selected }) => {
-  const { date, daymonth, isCurrentMonth, isToday, number, year, format } = day
+  const { date, daymonth, isCurrentMonth, isToday, number, index } = day
   const { postList, listAddDone } = useSelector((state) => state)
 
   const [moreClick, setMoreClick] = useState(false)
@@ -30,23 +30,21 @@ const Day = ({ day, select, selected }) => {
     setEditPopup(true)
   }
 
-  // const sectionDate = postList.find(
-  //   (v) => v.currentDate === date.format("YYYY-MM-DD"),
-  // )
-
-  const sectionData = postList.filter((v) => {
-    if (v.bgColor && v.currentDate === date.format("YYYY-MM-DD")) {
-      return v
-    }
-  })
+  const firstDate = index === 0 ? date.format("YYYY-MM-DD") : null
   // 현재날 짜와 리스트의 날짜가 같으면 ..
   const dateList = postList.filter((v) => {
     const test = v.currentDate === v.startDate
-    if (test && v.startDate === date.format("YYYY-MM-DD")) {
+    if (
+      (test && v.startDate === date.format("YYYY-MM-DD")) ||
+      firstDate === v.currentDate
+    ) {
       return v
     }
   })
-  console.log(dateList, sectionData)
+
+  const currentFirstDate = postList.find((v) => v.currentDate === firstDate)
+  console.log(dateList, firstDate)
+  // console.log(dateList)
 
   const more = dateList.length >= 3
   const onClickMore = useCallback((e) => {
@@ -77,20 +75,19 @@ const Day = ({ day, select, selected }) => {
           select(day, e)
         }}
       >
-        {sectionData.map((v) => (
-          <div
-            style={{
-              height: "10px",
-              backgroundColor: `${v.bgColor}`,
-            }}
-          />
-        ))}
-
         {number}
-        <DayList
-          post={dateList}
-          onClickPop={(list, e) => onClickPop(list, e)}
-        />
+        <ul>
+          {dateList.map(
+            (v, i) =>
+              i < 2 && (
+                <DayList
+                  post={v}
+                  index={index}
+                  onClickPop={(list, e) => onClickPop(list, e)}
+                />
+              ),
+          )}
+        </ul>
 
         {more && (
           <Button onClick={onClickMore} variant="link">

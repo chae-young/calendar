@@ -22,6 +22,7 @@ const CalenderTodo = () => {
 
   const select = (day, e) => {
     // console.log(day.date.toDate());
+    console.log(day)
     console.log(day, day.date.month(), day.date.get("date"))
     dispatch({ type: DAY_REQUEST, data: day })
     stylepop(e, setStyle, dayName)

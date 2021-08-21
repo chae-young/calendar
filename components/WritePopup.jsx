@@ -59,8 +59,7 @@ const WritePopup = ({ style }) => {
         // console.log("day", alldate.getDate())
         // console.log(new Date(sectionDate.setDate(sectionDate.getDate() + num)))
       }
-      console.log(currentDateArr)
-      const arr = currentDateArr.map((v) => ({
+      const arr = currentDateArr.map((v, i) => ({
         // id: postList.length,
         currentDate: moment(v).format("YYYY-MM-DD"),
         startDate: moment(currentDateArr[0]).format("YYYY-MM-DD"),
@@ -75,7 +74,7 @@ const WritePopup = ({ style }) => {
           desc,
         },
         bgColor,
-        section: setDate,
+        section: setDate - i,
       }))
       dispatch({ type: LIST_ADD_REQUEST, data: arr })
       setTitle("")
