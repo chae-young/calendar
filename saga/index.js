@@ -9,6 +9,9 @@ import {
   CURRENT_INFO_REQUEST,
   CURRENT_INFO_SUCCESS,
   CURRENT_INFO_FAIL,
+  EDIT_POST_REQUEST,
+  EDIT_POST_SUCCESS,
+  EDIT_POST_FAIL,
 } from "../reducers"
 
 function* testAPI() {}
@@ -55,6 +58,20 @@ function* currentInfo(action) {
     })
   }
 }
+function* editPost(action) {
+  try {
+    yield delay(1000)
+    yield put({
+      type: EDIT_POST_SUCCESS,
+      data: action.data,
+    })
+  } catch (err) {
+    yield put({
+      type: EDIT_POST_FAIL,
+      error: err.response.data,
+    })
+  }
+}
 
 function* watchDay() {
   yield takeLatest(DAY_REQUEST, day)
@@ -65,7 +82,15 @@ function* watchListAdd() {
 function* watchCurrentInfo() {
   yield takeLatest(CURRENT_INFO_REQUEST, currentInfo)
 }
+function* watchEditPost() {
+  yield takeLatest(EDIT_POST_REQUEST, editPost)
+}
 
 export default function* rootSaga() {
-  yield all([fork(watchDay), fork(watchListAdd), fork(watchCurrentInfo)])
+  yield all([
+    fork(watchDay),
+    fork(watchListAdd),
+    fork(watchCurrentInfo),
+    fork(watchEditPost),
+  ])
 }

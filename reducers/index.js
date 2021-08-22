@@ -4,6 +4,9 @@ const initialState = {
   postLoading: false,
   postDone: false,
   postFail: null,
+  editPostLoading: false,
+  editPostDone: false,
+  editPostFail: null,
   listAddLoading: false,
   listAddDone: false,
   listAddFail: null,
@@ -45,6 +48,10 @@ export const CURRENT_INFO_FAIL = "CURRENT_INFO_FAIL"
 export const COLOR_SELECT_REQUEST = "COLOR_SELECT_REQUEST"
 export const COLOR_SELECT_SUCCESS = "COLOR_SELECT_SUCCESS"
 export const COLOR_SELECT_FAIL = "COLOR_SELECT_FAIL"
+
+export const EDIT_POST_REQUEST = "EDIT_POST_REQUEST"
+export const EDIT_POST_SUCCESS = "EDIT_POST_SUCCESS"
+export const EDIT_POST_FAIL = "EDIT_POST_FAIL"
 
 export const WRITE_POPUP_OPEN = "WRITE_POPUP_OPEN"
 export const WRITE_POPUP_CLOSE = "WRITE_POPUP_CLOSE"
@@ -108,7 +115,9 @@ const reducer = (state = initialState, action) => {
         currentInfoDone: false,
       }
     case CURRENT_INFO_SUCCESS: {
-      const post = state.postList.find((v) => v.id === action.data.id)
+      const post = state.postList.find(
+        (v) => v.category === action.data.category,
+      )
       return {
         ...state,
         currentInfoLoading: false,
@@ -121,6 +130,30 @@ const reducer = (state = initialState, action) => {
         ...state,
         currentInfoLoading: false,
         currentInfoFail: action.error,
+      }
+    case EDIT_POST_REQUEST:
+      return {
+        ...state,
+        editPostLoading: true,
+        editPostDone: false,
+      }
+    case EDIT_POST_SUCCESS: {
+      const postList = state.postList.filter(
+        (v) => v.category !== action.data[0].category,
+      )
+      postList.push(...action.data)
+      return {
+        ...state,
+        postList,
+        editPostLoading: false,
+        editPostDone: true,
+      }
+    }
+    case EDIT_POST_FAIL:
+      return {
+        ...state,
+        editPostLoading: false,
+        editPostFail: action.error,
       }
     default:
       return state
