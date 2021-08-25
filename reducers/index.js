@@ -1,21 +1,4 @@
-import moment from "moment"
-
 const initialState = {
-  postLoading: false,
-  postDone: false,
-  postFail: null,
-  editPostLoading: false,
-  editPostDone: false,
-  editPostFail: null,
-  listAddLoading: false,
-  listAddDone: false,
-  listAddFail: null,
-  currentInfoLoading: false,
-  currentInfoDone: false,
-  currentInfoFail: false,
-  colorSelectLoading: false,
-  colorSelectDone: false,
-  colorSelectFail: false,
   nowDay: null,
   currentPost: null,
   writePopupOpen: false,
@@ -33,28 +16,38 @@ const initialState = {
   Color: "",
 }
 
-export const DAY_REQUEST = "DAY_REQUEST"
-export const DAY_SUCCESS = "DAY_SUCCESS"
-export const DAY_FAIL = "DAY_FAIL"
-
-export const LIST_ADD_REQUEST = "LIST_ADD_REQUEST"
-export const LIST_ADD_SUCCESS = "LIST_ADD_SUCCESS"
-export const LIST_ADD_FAIL = "LIST_ADD_FAIL"
-
-export const CURRENT_INFO_REQUEST = "CURRENT_INFO_REQUEST"
-export const CURRENT_INFO_SUCCESS = "CURRENT_INFO_SUCCESS"
-export const CURRENT_INFO_FAIL = "CURRENT_INFO_FAIL"
-
-export const COLOR_SELECT_REQUEST = "COLOR_SELECT_REQUEST"
-export const COLOR_SELECT_SUCCESS = "COLOR_SELECT_SUCCESS"
-export const COLOR_SELECT_FAIL = "COLOR_SELECT_FAIL"
-
-export const EDIT_POST_REQUEST = "EDIT_POST_REQUEST"
-export const EDIT_POST_SUCCESS = "EDIT_POST_SUCCESS"
-export const EDIT_POST_FAIL = "EDIT_POST_FAIL"
-
+// 액션
+export const NOW_DAY = "NOW_DAY"
+export const POST_ADD = "POST_ADD"
+export const CURRENT_INFO = "CURRENT_INFO"
+export const COLOR_SELECT = "COLOR_SELECT"
+export const EDIT_POST = "EDIT_POST"
 export const WRITE_POPUP_OPEN = "WRITE_POPUP_OPEN"
 export const WRITE_POPUP_CLOSE = "WRITE_POPUP_CLOSE"
+
+// 액션 크리에이터 함수
+export const dayRequest = (data) => ({
+  type: NOW_DAY,
+  data,
+})
+export const listAddRequest = (data) => ({
+  type: POST_ADD,
+  data,
+})
+export const currentInfoRequest = (data) => ({
+  type: CURRENT_INFO,
+  data,
+})
+export const colorSelectReqeust = (data) => ({
+  type: COLOR_SELECT,
+  ...data,
+})
+export const editPostRequest = (data) => ({
+  type: EDIT_POST,
+  data,
+})
+export const popupOpen = () => ({ type: WRITE_POPUP_OPEN })
+export const popupClose = () => ({ type: WRITE_POPUP_CLOSE })
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -66,78 +59,27 @@ const reducer = (state = initialState, action) => {
     case WRITE_POPUP_CLOSE:
       return {
         ...state,
+        currentPost: null,
         writePopupOpen: false,
       }
-    case DAY_REQUEST:
+    case NOW_DAY:
       return {
         ...state,
-        postLoading: true,
-        postDone: false,
         nowDay: action.data,
       }
-    case DAY_SUCCESS:
+    case POST_ADD:
       return {
         ...state,
-
-        postLoading: false,
-        postDone: true,
-      }
-    case DAY_FAIL:
-      return {
-        ...state,
-        postLoading: false,
-        postFail: action.error,
-      }
-    case LIST_ADD_REQUEST:
-      return {
-        ...state,
-        listAddLoading: true,
-        listAddDone: false,
-      }
-    case LIST_ADD_SUCCESS: {
-      return {
-        ...state,
-        listAddLoading: false,
-        listAddDone: true,
         postList: [...state.postList, ...action.data],
       }
-    }
-    case LIST_ADD_FAIL:
+    case CURRENT_INFO: {
+      const post = state.postList.find((v) => v.category === action.data)
       return {
         ...state,
-        listAddLoading: false,
-        listAddFail: action.error,
-      }
-    case CURRENT_INFO_REQUEST:
-      return {
-        ...state,
-        currentInfoLoading: true,
-        currentInfoDone: false,
-      }
-    case CURRENT_INFO_SUCCESS: {
-      const post = state.postList.find(
-        (v) => v.category === action.data.category,
-      )
-      return {
-        ...state,
-        currentInfoLoading: false,
         currentPost: post,
-        currentInfoDone: true,
       }
     }
-    case CURRENT_INFO_FAIL:
-      return {
-        ...state,
-        currentInfoLoading: false,
-        currentInfoFail: action.error,
-      }
-    case EDIT_POST_REQUEST:
-      return {
-        ...state,
-        editPostLoading: true,
-        editPostDone: false,
-      }
-    case EDIT_POST_SUCCESS: {
+    case EDIT_POST: {
       const postList = state.postList.filter(
         (v) => v.category !== action.data[0].category,
       )
@@ -145,16 +87,8 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         postList,
-        editPostLoading: false,
-        editPostDone: true,
       }
     }
-    case EDIT_POST_FAIL:
-      return {
-        ...state,
-        editPostLoading: false,
-        editPostFail: action.error,
-      }
     default:
       return state
   }
