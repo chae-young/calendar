@@ -10,7 +10,13 @@ import styled from "styled-components"
 import GlobalStyle from "../style/GlobalStyle"
 import Week from "./Week"
 import WritePopup from "./WritePopup"
-import { DAY_REQUEST, WRITE_POPUP_OPEN } from "../reducers"
+import {
+  dayRequest,
+  DAY_REQUEST,
+  listAddRequest,
+  popupOpen,
+  writePopup,
+} from "../reducers"
 import { CalendarRow, val } from "../style/common"
 
 export let weekLength
@@ -24,10 +30,7 @@ const CalendarHeader = styled.div`
   margin:auto;
 }
 `
-const CalendarBody = styled.div`
-  margin: 0 10px;
-  border-right: 1px solid rgb(0, 0, 0);
-`
+const CalendarBody = styled.div``
 const CalendarContent = styled.div`
   height: calc(100vh - ${val.sum()}px);
 `
@@ -45,6 +48,7 @@ function positionStyle({ target, colTop, popupHeight }) {
   } else {
     upY = Math.min(colTop, target.clientY)
   }
+
   // const upY = Math.min(colTop, target.clientY)
   const setStyle = {}
   const x = Array(7)
@@ -91,6 +95,7 @@ const CalendarTodo = () => {
   const [selected, setSelected] = useState(moment().startOf("day"))
   const dayName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Set"]
 
+  const weekRef = useRef(null)
   const popup = useRef(null)
   const [style, setStyle] = useState(null)
   const [popupObj, setPopupObj] = useState({
@@ -100,6 +105,7 @@ const CalendarTodo = () => {
   })
 
   useEffect(() => {
+    console.log(popupObj)
     if (writePopupOpen) {
       setPopupObj((prev) => ({
         ...prev,
@@ -114,13 +120,16 @@ const CalendarTodo = () => {
     setPopupObj((prev) => ({
       ...prev,
       target: e,
-      colTop: col.current.offsetTop,
+      colTop: col.current.offsetParent.offsetTop,
     }))
-
-    dispatch({ type: DAY_REQUEST, data: day })
+    dispatch(dayRequest(day))
     setSelected(day.date)
-    dispatch({ type: WRITE_POPUP_OPEN })
-    console.log(popup.current, day, day.date.month(), day.date.get("date"))
+    dispatch(popupOpen())
+    console.log(
+      col.current.offsetParent.offsetTop,
+      day.date.month(),
+      day.date.get("date"),
+    )
   }, [])
 
   const previous = () => {
