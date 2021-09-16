@@ -6,7 +6,8 @@
   "homepage": "https://chae-young.github.io/calendar",
   "scripts": {
     "dev": "webpack serve --env development",
-    "build": "webpack",
+    "build": "webpack --mode production",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "author": "2chaeng",
@@ -45,6 +46,7 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-webpack-plugin": "^3.0.1",
+    "gh-pages": "^3.2.3",
     "prettier": "^2.3.2",
     "react-refresh": "^0.9.0",
     "style-loader": "^2.0.0",
