@@ -5,7 +5,6 @@ import moment from "moment"
 import DatePicker, { registerLocale } from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import ko from "date-fns/locale/ko"
-import shortid from "shortid"
 
 import { Form } from "react-bootstrap"
 import { X } from "react-bootstrap-icons"

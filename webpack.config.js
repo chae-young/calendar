@@ -1,6 +1,7 @@
 const path = require("path")
 const webpack = require("webpack")
 const ESLintPlugin = require("eslint-webpack-plugin")
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer")
 
 module.exports = {
   mode: "development", // 배포: production
@@ -59,6 +60,8 @@ module.exports = {
   },
   plugins: [
     new webpack.LoaderOptionsPlugin({ debug: true }),
+    new BundleAnalyzerPlugin(),
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ko/),
     new ESLintPlugin({
       context: "./.eslintrc",
       extensions: [".jsx", ".js"],
