@@ -1,52 +1,80 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useEffect, useCallback } from "react"
+import PropTypes from "prop-types"
 import { useDispatch, useSelector } from "react-redux"
 
 import { Pencil, Trash, X } from "react-bootstrap-icons"
 import { ButtonGroup, Button } from "react-bootstrap"
 
-import { CURRENT_INFO_REQUEST, WRITE_POPUP_OPEN } from "../reducers"
+import styled from "styled-components"
+import { currentInfoRequest, popupOpen, deletePostRequest } from "../reducers"
 
+const Popup = styled.div`
+  position: absolute;
+  top: 0;
+  z-index: 99;
+  background: #fff;
+  -webkit-box-shadow: 0px 6px 18px 4px #666666;
+  box-shadow: 0px 6px 18px 4px #666666;
+  @media screen and (max-width: 767px) {
+    width: 260px;
+    min-height: 260px;
+    position: fixed;
+    left: 0;
+    top: 50%;
+    left: 50%;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+  }
+`
+const EditButton = styled(Button)`
+  background-color: #000000;
+  border-color: #000000;
+`
+const PopupTitle = styled.p`
+  padding: 1rem;
+  color: rgb(0, 0, 0);
+`
 const EditPopup = ({ currentList, setEditPopup }) => {
   const dispatch = useDispatch()
-  const { currentInfoDone } = useSelector((state) => state)
+  const { currentPost } = useSelector((state) => state)
 
   useEffect(() => {
-    console.log(currentInfoDone)
-    if (currentInfoDone) {
-      dispatch({ type: WRITE_POPUP_OPEN })
+    if (currentPost) {
+      dispatch(popupOpen())
       setEditPopup(false)
     }
-  }, [currentInfoDone])
+  }, [currentPost])
 
+  const onClickDelete = useCallback(() => {
+    dispatch(deletePostRequest(currentList.category))
+    setEditPopup(false)
+  }, [currentList])
   const onClickEdit = useCallback(() => {
-    dispatch({
-      type: CURRENT_INFO_REQUEST,
-      data: { id: currentList.id },
-    })
-    // setEditPopup(false)
-  }, [currentInfoDone])
+    dispatch(currentInfoRequest(currentList.category))
+  }, [currentList])
 
   const onClose = useCallback(() => {
     setEditPopup(false)
   }, [])
   return (
-    <>
-      <div>
-        <ButtonGroup aria-label="Basic">
-          <Button variant="secondary" onClick={onClickEdit}>
-            <Pencil size={12} />
-          </Button>
-          <Button variant="secondary">
-            <Trash size={12} />
-          </Button>
-          <Button variant="secondary" onClick={onClose}>
-            <X />
-          </Button>
-        </ButtonGroup>
-        <h3>{currentList.title}</h3>
-      </div>
-    </>
+    <Popup onClick={(e) => e.stopPropagation()}>
+      <ButtonGroup aria-label="Basic" style={{ backgroundColor: "#000" }}>
+        <EditButton variant="secondary" onClick={onClickEdit}>
+          <Pencil size={12} />
+        </EditButton>
+        <EditButton variant="secondary" onClick={onClickDelete}>
+          <Trash size={12} />
+        </EditButton>
+        <EditButton variant="secondary" onClick={onClose}>
+          <X />
+        </EditButton>
+      </ButtonGroup>
+      <PopupTitle>{currentList.content.title}</PopupTitle>
+    </Popup>
   )
 }
-
+EditPopup.propTypes = {
+  currentList: PropTypes.object.isRequired,
+  setEditPopup: PropTypes.func.isRequired,
+}
 export default EditPopup

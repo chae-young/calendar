@@ -1,30 +1,70 @@
-import React, { useState, useEffect, useRef } from "react"
-import { useSelector } from "react-redux"
+import React from "react"
+import PropTypes from "prop-types"
 
-const DayList = ({ post, index, onClickPop }) => {
-  const { dayList } = useSelector((state) => state)
+import styled from "styled-components"
+import { TextEllipsis } from "../style/common"
 
-  const sectionVal = 7 - index
-  const sectionWidth =
-    sectionVal - post.section > 0 ? post.section + 1 : sectionVal
+const CalenderList = styled.li`
+  height: 30px;
 
-  console.log(sectionVal, "ddddddd")
+  & button {
+    display: block;
+    width: 13.7vw;
+    height: 100%;
+    padding: 0 0 0 5px;
+    box-sizing: border-box;
+    font-size: 1.3rem;
+    ${TextEllipsis};
+  }
+`
+const Button = styled.button`
+  display: block;
+`
+const DayList = ({ post, onClickPop }) => {
+  // const sectionVal = 7 - dayindex
+  // const sectionWidth =
+  //   sectionVal - post.section > 0 ? post.section + 1 : sectionVal
+
+  // const left = useCallback(() => {
+  //   const width = Math.floor(window.innerWidth / 7)
+  //   return ((width * dayindex) / window.innerWidth) * 100
+  // }, [])
+
+  // const height = () => {
+  //   return 30 * (index + 1)
+  // }
+
+  const bgColorRender = (color) => {
+    let bg
+    if (color) {
+      bg = color
+    } else {
+      bg = "rgb(248,248,248)"
+    }
+    return bg
+  }
+
   return (
     <>
-      <li
+      <CalenderList
         style={{
-          width: `calc(100% * ${sectionWidth})`,
-          backgroundColor: `${post.bgColor}`,
+          width: "100%",
+          backgroundColor: `${bgColorRender(post.bgColor)}`,
         }}
         onClick={(e) => {
           e.stopPropagation()
         }}
       >
-        <button type="button">{post.content.title}</button>
+        <Button type="button" onClick={(e) => onClickPop(post, e)}>
+          {post.content.title}
+        </Button>
         {/* onClick={(e) => onClickPop(data, e)} */}
-      </li>
+      </CalenderList>
     </>
   )
 }
-
+DayList.propTypes = {
+  post: PropTypes.object.isRequired,
+  onClickPop: PropTypes.object.isRequired,
+}
 export default DayList

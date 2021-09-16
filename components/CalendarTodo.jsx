@@ -10,13 +10,7 @@ import styled from "styled-components"
 import GlobalStyle from "../style/GlobalStyle"
 import Week from "./Week"
 import WritePopup from "./WritePopup"
-import {
-  dayRequest,
-  DAY_REQUEST,
-  listAddRequest,
-  popupOpen,
-  writePopup,
-} from "../reducers"
+import { dayRequest, popupOpen } from "../reducers"
 import { CalendarRow, val } from "../style/common"
 
 export let weekLength
@@ -28,6 +22,7 @@ const CalendarHeader = styled.div`
   align-items: center;
   justify-content: center;
   margin:auto;
+  font-size: 1.4rem;  
 }
 `
 const CalendarBody = styled.div``
@@ -49,7 +44,6 @@ function positionStyle({ target, colTop, popupHeight }) {
     upY = Math.min(colTop, target.clientY)
   }
 
-  // const upY = Math.min(colTop, target.clientY)
   const setStyle = {}
   const x = Array(7)
     .fill()
@@ -64,11 +58,11 @@ function positionStyle({ target, colTop, popupHeight }) {
     // 오른쪽
     const rightX = window.innerWidth - closest
     if (window.innerHeight / 2 > target.clientY) {
-      console.log("오른쪽위")
+      // console.log("오른쪽위")
       setStyle.top = upY
       setStyle.right = rightX
     } else {
-      console.log("오른쪽 아래")
+      // console.log("오른쪽 아래")
       setStyle.top = upY
       setStyle.right = rightX
     }
@@ -76,11 +70,11 @@ function positionStyle({ target, colTop, popupHeight }) {
     // 왼쪽
     const leftX = closest + colWidth
     if (window.innerHeight / 2 > target.clientY) {
-      console.log("왼쪽위")
+      // console.log("왼쪽위")
       setStyle.top = upY
       setStyle.left = leftX
     } else {
-      console.log("왼쪽 아래")
+      // console.log("왼쪽 아래")
       setStyle.top = upY
       setStyle.left = leftX
     }
@@ -95,7 +89,6 @@ const CalendarTodo = () => {
   const [selected, setSelected] = useState(moment().startOf("day"))
   const dayName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Set"]
 
-  const weekRef = useRef(null)
   const popup = useRef(null)
   const [style, setStyle] = useState(null)
   const [popupObj, setPopupObj] = useState({
@@ -105,7 +98,6 @@ const CalendarTodo = () => {
   })
 
   useEffect(() => {
-    console.log(popupObj)
     if (writePopupOpen) {
       setPopupObj((prev) => ({
         ...prev,
@@ -116,7 +108,6 @@ const CalendarTodo = () => {
   }, [writePopupOpen, popupObj.target])
 
   const select = useCallback((day, col, e) => {
-    // console.log(day.date.toDate());
     setPopupObj((prev) => ({
       ...prev,
       target: e,
@@ -125,19 +116,14 @@ const CalendarTodo = () => {
     dispatch(dayRequest(day))
     setSelected(day.date)
     dispatch(popupOpen())
-    console.log(
-      col.current.offsetParent.offsetTop,
-      day.date.month(),
-      day.date.get("date"),
-    )
   }, [])
 
-  const previous = () => {
+  const previous = useCallback(() => {
     setToday(today.clone().subtract(1, "month"))
-  }
-  const next = () => {
+  }, [today])
+  const next = useCallback(() => {
     setToday(today.clone().add(1, "month"))
-  }
+  }, [today])
 
   const renderWeeks = () => {
     const weeks = []
@@ -186,7 +172,7 @@ const CalendarTodo = () => {
       <CalendarBody>
         <CalendarRow>
           {dayName.map((v) => (
-            <div>{v}</div>
+            <div key={v}>{v}</div>
           ))}
         </CalendarRow>
         <CalendarContent>{renderWeeks()}</CalendarContent>

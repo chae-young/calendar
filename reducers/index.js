@@ -1,5 +1,6 @@
 const initialState = {
   nowDay: null,
+  addPost: [],
   currentPost: null,
   writePopupOpen: false,
   postList: [
@@ -22,6 +23,7 @@ export const POST_ADD = "POST_ADD"
 export const CURRENT_INFO = "CURRENT_INFO"
 export const COLOR_SELECT = "COLOR_SELECT"
 export const EDIT_POST = "EDIT_POST"
+export const DELETE_POST = "DELETE_POST"
 export const WRITE_POPUP_OPEN = "WRITE_POPUP_OPEN"
 export const WRITE_POPUP_CLOSE = "WRITE_POPUP_CLOSE"
 
@@ -44,6 +46,10 @@ export const colorSelectReqeust = (data) => ({
 })
 export const editPostRequest = (data) => ({
   type: EDIT_POST,
+  data,
+})
+export const deletePostRequest = (data) => ({
+  type: DELETE_POST,
   data,
 })
 export const popupOpen = () => ({ type: WRITE_POPUP_OPEN })
@@ -71,6 +77,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         postList: [...state.postList, ...action.data],
+        addPost: [...action.data],
       }
     case CURRENT_INFO: {
       const post = state.postList.find((v) => v.category === action.data)
@@ -84,6 +91,14 @@ const reducer = (state = initialState, action) => {
         (v) => v.category !== action.data[0].category,
       )
       postList.push(...action.data)
+      return {
+        ...state,
+        postList,
+      }
+    }
+    case DELETE_POST: {
+      const postList = state.postList.filter((v) => v.category !== action.data)
+      console.log(postList)
       return {
         ...state,
         postList,

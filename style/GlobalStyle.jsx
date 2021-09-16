@@ -1,7 +1,14 @@
 import { createGlobalStyle } from "styled-components"
 
 const GlobalStyle = createGlobalStyle`
-html, body, div, span, applet, object, iframe,
+html,body{
+	margin: 0;
+	padding: 0;
+	border: 0;	
+	font-size:10px;
+	line-height:1.5;
+}
+div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp,

@@ -1,0 +1,25 @@
+.sunday {
+  color: rgb(233, 32, 64);
+}
+.saturday {
+  color: rgb(28, 95, 173);
+}
+.today {
+  color: rgb(255, 255, 255);
+}
+.today .number {
+  position: relative;
+  z-index: 5;
+}
+.today .number:before {
+  content: "";
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  background: rgb(119 221 118);
+  z-index: -1;
+}

@@ -1,7 +1,8 @@
-import React, { useState } from "react"
-import moment from "moment"
-import { Row } from "react-bootstrap"
+import React from "react"
+import PropTypes from "prop-types"
+
 import Day from "./Day"
+import { CalendarRow } from "../style/common"
 
 const Week = ({ date, month, select, selected }) => {
   const days = []
@@ -15,14 +16,20 @@ const Week = ({ date, month, select, selected }) => {
       isCurrentMonth: date.month() === month.month(),
       isToday: date.isSame(new Date(), "day"),
       date,
-      index: i,
+      dayindex: i,
+      currentday: date.day(),
     }
     days.push(<Day day={day} selected={selected} select={select} />)
     date = date.clone()
     date.add(1, "day")
   }
 
-  return <Row>{days}</Row>
+  return <CalendarRow day>{days}</CalendarRow>
 }
-
+Week.propTypes = {
+  date: PropTypes.object.isRequired,
+  month: PropTypes.object.isRequired,
+  select: PropTypes.func.isRequired,
+  selected: PropTypes.object.isRequired,
+}
 export default Week
