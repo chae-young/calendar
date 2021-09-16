@@ -2,9 +2,10 @@ import React, { forwardRef, useCallback, useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { useDispatch, useSelector } from "react-redux"
 import moment from "moment"
+
 import DatePicker, { registerLocale } from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
-import ko from "date-fns/locale/ko"
+import { ko } from "date-fns/esm/locale"
 
 import { Form } from "react-bootstrap"
 import { X } from "react-bootstrap-icons"
@@ -158,6 +159,7 @@ const WritePopup = ({ style }, ref) => {
             selectsStart
             startDate={startDate}
             endDate={endDate}
+            locale="ko"
           />
           <span>-</span>
           <DatePicker
@@ -167,6 +169,7 @@ const WritePopup = ({ style }, ref) => {
             startDate={startDate}
             endDate={endDate}
             minDate={startDate}
+            locale="ko"
           />
         </DateBox>
         <SelectOption setBgColor={setBgColor} />
