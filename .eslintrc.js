@@ -8,5 +8,6 @@ module.exports = {
   plugins: ["react-hooks", "prettier"],
   rules: {
     "prettier/prettier": "off",
+    "prefer-const": "off,",
   },
 }

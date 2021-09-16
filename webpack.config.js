@@ -3,9 +3,9 @@ const webpack = require("webpack")
 const ESLintPlugin = require("eslint-webpack-plugin")
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer")
 
-module.exports = {
+const config = {
   mode: "development", // 배포: production
-  devtool: "eval",
+  devtool: "inline-source-map",
   resolve: {
     extensions: [".jsx", ".js"],
   },
@@ -72,4 +72,13 @@ module.exports = {
     filename: "app.js",
     // publicPath: "/react_pr/todoList/",
   },
+}
+
+module.exports = (env, argv) => {
+  if (argv.mode === "production") {
+    config.mode = "production"
+    config.devtool = false
+    config.entry.app = "./dist/app.js"
+  }
+  return config
 }
