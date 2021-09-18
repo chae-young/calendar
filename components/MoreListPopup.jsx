@@ -4,8 +4,6 @@ import PropTypes from "prop-types"
 import { X } from "react-bootstrap-icons"
 
 import styled from "styled-components"
-import { TextEllipsis } from "../style/common"
-import EditPopup from "./EditPopup"
 
 const MoreListPopWrap = styled.div`
   position: absolute;

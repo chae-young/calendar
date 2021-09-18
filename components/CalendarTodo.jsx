@@ -12,6 +12,7 @@ import Week from "./Week"
 import WritePopup from "./WritePopup"
 import { dayRequest, popupOpen } from "../reducers"
 import { CalendarRow, val } from "../style/common"
+import usePositionStyle from "../hooks/usePositionStyle"
 
 export let weekLength
 const CalendarHeader = styled.div`
@@ -33,79 +34,44 @@ const Button = styled.button`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  ${(props) => (props.direction ? "right:0" : "left :0")};
+  ${(props) => (props.direction ? "right: 0" : "left: 0")};
 `
-function positionStyle({ target, colTop, popupHeight }) {
-  const colWidth = target.target.clientWidth
-  let upY
-  if (window.innerHeight < colTop + popupHeight) {
-    upY = colTop - popupHeight / 2
-  } else {
-    upY = Math.min(colTop, target.clientY)
-  }
-
-  const setStyle = {}
-  const x = Array(7)
-    .fill()
-    .map((v, i) => colWidth * i)
-  const closest = x.reduce((acc, curr) => {
-    return acc < target.clientX && target.clientX < curr ? acc : curr
-  })
-  if (window.innerWidth < 1199) {
-    setStyle.top = 0
-    setStyle.left = 0
-  } else if (window.innerWidth / 2 < target.clientX) {
-    // 오른쪽
-    const rightX = window.innerWidth - closest
-    if (window.innerHeight / 2 > target.clientY) {
-      // console.log("오른쪽위")
-      setStyle.top = upY
-      setStyle.right = rightX
-    } else {
-      // console.log("오른쪽 아래")
-      setStyle.top = upY
-      setStyle.right = rightX
-    }
-  } else if (window.innerWidth / 2 > target.clientX) {
-    // 왼쪽
-    const leftX = closest + colWidth
-    if (window.innerHeight / 2 > target.clientY) {
-      // console.log("왼쪽위")
-      setStyle.top = upY
-      setStyle.left = leftX
-    } else {
-      // console.log("왼쪽 아래")
-      setStyle.top = upY
-      setStyle.left = leftX
-    }
-  }
-  return setStyle
-}
 
 const CalendarTodo = () => {
   const dispatch = useDispatch()
-  const { writePopupOpen } = useSelector((state) => state)
+  const { writePopupOpen, editMode } = useSelector((state) => state)
   const [today, setToday] = useState(moment())
   const [selected, setSelected] = useState(moment().startOf("day"))
   const dayName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Set"]
+  const buttonDirection = true
 
   const popup = useRef(null)
-  const [style, setStyle] = useState(null)
   const [popupObj, setPopupObj] = useState({
     target: null,
     colTop: null,
     popupHeight: popup.current,
   })
+  const popupStyle = usePositionStyle(popupObj)
 
+  // const [popupStyle, setStyle] = useState({ display: "block" })
   useEffect(() => {
     if (writePopupOpen) {
       setPopupObj((prev) => ({
         ...prev,
         popupHeight: popup.current.offsetHeight,
       }))
-      setStyle(positionStyle(popupObj))
+    } else {
+      setPopupObj((prev) => ({
+        ...prev,
+        target: null,
+      }))
     }
   }, [writePopupOpen, popupObj.target])
+
+  useEffect(() => {
+    // console.log(editMode, popupObj.target)
+    if (popupObj.target && !editMode) dispatch(popupOpen())
+  }, [popupObj.target, editMode])
 
   const select = useCallback((day, col, e) => {
     setPopupObj((prev) => ({
@@ -115,7 +81,6 @@ const CalendarTodo = () => {
     }))
     dispatch(dayRequest(day))
     setSelected(day.date)
-    dispatch(popupOpen())
   }, [])
 
   const previous = useCallback(() => {
@@ -161,11 +126,19 @@ const CalendarTodo = () => {
       <GlobalStyle />
 
       <CalendarHeader>
-        <Button direction={false} type="button" onClick={previous}>
+        <Button
+          direction={!buttonDirection ? 1 : 0}
+          type="button"
+          onClick={previous}
+        >
           <ChevronLeft />
         </Button>
         {today.format("YYYY[년] MMMM")}
-        <Button direction type="button" onClick={next}>
+        <Button
+          direction={buttonDirection ? 1 : 0}
+          type="button"
+          onClick={next}
+        >
           <ChevronRight />
         </Button>
       </CalendarHeader>
@@ -177,7 +150,7 @@ const CalendarTodo = () => {
         </CalendarRow>
         <CalendarContent>{renderWeeks()}</CalendarContent>
       </CalendarBody>
-      {writePopupOpen && <WritePopup style={style} ref={popup} />}
+      {writePopupOpen && <WritePopup style={popupStyle} ref={popup} />}
     </>
   )
 }

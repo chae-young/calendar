@@ -50,7 +50,7 @@ const Day = ({ day, select, selected }) => {
     e.stopPropagation()
     setMoreClick(true)
   })
-
+  const [target, setTarget] = useState("")
   const col = useRef(null)
   return (
     <div
@@ -62,6 +62,7 @@ const Day = ({ day, select, selected }) => {
         currentday === 0 ? " sunday" : ""
       }${currentday === 6 ? " saturday" : ""}`}
       onClick={(e) => {
+        setTarget(e)
         select(day, col, e)
       }}
     >
@@ -72,7 +73,15 @@ const Day = ({ day, select, selected }) => {
         {dateList.map(
           (v, i, arr) =>
             i < 2 && (
-              <DayList post={v} onClickPop={(list, e) => onClickPop(list, e)} />
+              <DayList
+                key={v.category}
+                post={v}
+                onClickPop={(list, e) => onClickPop(list, e)}
+                select={select}
+                day={day}
+                col={col}
+                target={target}
+              />
             ),
         )}
       </ul>
@@ -90,7 +99,12 @@ const Day = ({ day, select, selected }) => {
         />
       )}
       {editPopup && (
-        <EditPopup currentList={currentList} setEditPopup={setEditPopup} />
+        <EditPopup
+          currentList={currentList}
+          setEditPopup={setEditPopup}
+          target={target}
+          col={col}
+        />
       )}
     </div>
   )

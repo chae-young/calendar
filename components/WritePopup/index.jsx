@@ -26,7 +26,7 @@ const Popup = styled.div`
   -webkit-box-shadow: 0px 6px 18px 4px #666666;
   box-shadow: 0px 6px 10px 0px #666666;
   background: rgb(255 253 197);
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 1199px) {
     width: 100%;
   }
 `
@@ -65,7 +65,7 @@ const SubmitBtn = styled.button`
   color: rgb(255, 255, 255);
 `
 
-const WritePopup = ({ style }, ref) => {
+const WritePopup = forwardRef(({ style }, ref) => {
   const dispatch = useDispatch()
   const { nowDay, postList, currentPost } = useSelector((state) => state)
   const [startDate, setStartDate] = useState(nowDay.date.toDate())
@@ -77,6 +77,8 @@ const WritePopup = ({ style }, ref) => {
   useEffect(() => {
     if (currentPost) {
       setTitle(currentPost.content.title)
+      setStartDate(new Date(currentPost.startDate))
+      setEndDate(new Date(currentPost.endDate))
       const editPost = postList.find((v) => currentPost.category === v.category)
       setEdit(editPost)
     }
@@ -141,7 +143,7 @@ const WritePopup = ({ style }, ref) => {
   }, [])
 
   return (
-    <Popup style={style} ref={ref} classNmae="calendar__popup">
+    <Popup style={style} ref={ref}>
       <CloseBtn onClick={onClose}>
         <X size={25} />
       </CloseBtn>
@@ -177,8 +179,11 @@ const WritePopup = ({ style }, ref) => {
       </Form>
     </Popup>
   )
-}
+})
+
 WritePopup.propTypes = {
   style: PropTypes.object.isRequired,
 }
-export default forwardRef(WritePopup)
+WritePopup.displayName = "WritePopup"
+
+export default WritePopup

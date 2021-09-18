@@ -6,7 +6,12 @@ import { Pencil, Trash, X } from "react-bootstrap-icons"
 import { ButtonGroup, Button } from "react-bootstrap"
 
 import styled from "styled-components"
-import { currentInfoRequest, popupOpen, deletePostRequest } from "../reducers"
+import {
+  currentInfoRequest,
+  popupOpen,
+  deletePostRequest,
+  editModeClose,
+} from "../reducers"
 
 const Popup = styled.div`
   position: absolute;
@@ -34,7 +39,7 @@ const PopupTitle = styled.p`
   padding: 1rem;
   color: rgb(0, 0, 0);
 `
-const EditPopup = ({ currentList, setEditPopup }) => {
+const EditPopup = ({ currentList, setEditPopup, ...obj }) => {
   const dispatch = useDispatch()
   const { currentPost } = useSelector((state) => state)
 
@@ -49,11 +54,13 @@ const EditPopup = ({ currentList, setEditPopup }) => {
     dispatch(deletePostRequest(currentList.category))
     setEditPopup(false)
   }, [currentList])
+
   const onClickEdit = useCallback(() => {
     dispatch(currentInfoRequest(currentList.category))
   }, [currentList])
 
   const onClose = useCallback(() => {
+    dispatch(editModeClose())
     setEditPopup(false)
   }, [])
   return (

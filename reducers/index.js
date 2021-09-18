@@ -1,19 +1,10 @@
 const initialState = {
   nowDay: null,
   addPost: [],
+  editMode: false,
   currentPost: null,
   writePopupOpen: false,
-  postList: [
-    // {
-    //     month:null,
-    //     post:null,
-    //     weekDay:null,
-    //     text:[],
-    //     desc:[],
-    //     content:{}
-    //
-    // }
-  ],
+  postList: [],
   Color: "",
 }
 
@@ -26,6 +17,8 @@ export const EDIT_POST = "EDIT_POST"
 export const DELETE_POST = "DELETE_POST"
 export const WRITE_POPUP_OPEN = "WRITE_POPUP_OPEN"
 export const WRITE_POPUP_CLOSE = "WRITE_POPUP_CLOSE"
+export const EDIT_MODE_START = "EDIT_MODE_START"
+export const EDIT_MODE_CLOSE = "EDIT_MODE_CLOSE"
 
 // 액션 크리에이터 함수
 export const dayRequest = (data) => ({
@@ -52,11 +45,25 @@ export const deletePostRequest = (data) => ({
   type: DELETE_POST,
   data,
 })
+export const editModeStart = () => ({ type: EDIT_MODE_START })
+export const editModeClose = () => ({ type: EDIT_MODE_CLOSE })
 export const popupOpen = () => ({ type: WRITE_POPUP_OPEN })
 export const popupClose = () => ({ type: WRITE_POPUP_CLOSE })
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case EDIT_MODE_START:
+      return {
+        ...state,
+        editMode: true,
+        nowDay: false,
+      }
+    case EDIT_MODE_CLOSE:
+      return {
+        ...state,
+        editMode: false,
+        // nowDay: false,
+      }
     case WRITE_POPUP_OPEN:
       return {
         ...state,
@@ -67,12 +74,14 @@ const reducer = (state = initialState, action) => {
         ...state,
         currentPost: null,
         writePopupOpen: false,
+        editMode: false,
       }
     case NOW_DAY:
       return {
         ...state,
         nowDay: action.data,
       }
+
     case POST_ADD:
       return {
         ...state,
@@ -83,6 +92,7 @@ const reducer = (state = initialState, action) => {
       const post = state.postList.find((v) => v.category === action.data)
       return {
         ...state,
+
         currentPost: post,
       }
     }
@@ -98,7 +108,7 @@ const reducer = (state = initialState, action) => {
     }
     case DELETE_POST: {
       const postList = state.postList.filter((v) => v.category !== action.data)
-      console.log(postList)
+
       return {
         ...state,
         postList,

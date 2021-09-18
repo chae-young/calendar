@@ -52,10 +52,8 @@ const SelectOption = ({ setBgColor }) => {
             key={v}
             style={{ backgroundColor: `${v}` }}
             onClick={() => onColor(i)}
-            className={colorSelect === i && "active"}
-          >
-            {" "}
-          </li>
+            className={colorSelect === i ? "active" : ""}
+          />
         ))}
       </ColorList>
     </>

@@ -19,7 +19,9 @@ const Week = ({ date, month, select, selected }) => {
       dayindex: i,
       currentday: date.day(),
     }
-    days.push(<Day day={day} selected={selected} select={select} />)
+    days.push(
+      <Day key={day.format} day={day} selected={selected} select={select} />,
+    )
     date = date.clone()
     date.add(1, "day")
   }

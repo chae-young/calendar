@@ -1,8 +1,10 @@
-import React from "react"
+import React, { useCallback } from "react"
 import PropTypes from "prop-types"
+import { useDispatch } from "react-redux"
 
 import styled from "styled-components"
 import { TextEllipsis } from "../style/common"
+import { editModeStart } from "../reducers"
 
 const CalenderList = styled.li`
   height: 30px;
@@ -20,7 +22,7 @@ const CalenderList = styled.li`
 const Button = styled.button`
   display: block;
 `
-const DayList = ({ post, onClickPop }) => {
+const DayList = ({ post, onClickPop, select, ...obj }) => {
   // const sectionVal = 7 - dayindex
   // const sectionWidth =
   //   sectionVal - post.section > 0 ? post.section + 1 : sectionVal
@@ -33,6 +35,7 @@ const DayList = ({ post, onClickPop }) => {
   // const height = () => {
   //   return 30 * (index + 1)
   // }
+  const dispatch = useDispatch()
 
   const bgColorRender = (color) => {
     let bg
@@ -43,7 +46,14 @@ const DayList = ({ post, onClickPop }) => {
     }
     return bg
   }
-
+  const onClicklist = useCallback(
+    (e) => {
+      // e.stopPropagation()
+      dispatch(editModeStart())
+      select(obj.day, obj.col, obj.target)
+    },
+    [obj],
+  )
   return (
     <>
       <CalenderList
@@ -51,9 +61,7 @@ const DayList = ({ post, onClickPop }) => {
           width: "100%",
           backgroundColor: `${bgColorRender(post.bgColor)}`,
         }}
-        onClick={(e) => {
-          e.stopPropagation()
-        }}
+        onClick={onClicklist}
       >
         <Button type="button" onClick={(e) => onClickPop(post, e)}>
           {post.content.title}
@@ -65,6 +73,6 @@ const DayList = ({ post, onClickPop }) => {
 }
 DayList.propTypes = {
   post: PropTypes.object.isRequired,
-  onClickPop: PropTypes.object.isRequired,
+  onClickPop: PropTypes.func.isRequired,
 }
 export default DayList
