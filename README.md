@@ -3,7 +3,7 @@
 
 # React Calendar
 
-![TODOLIST](https://user-images.githubusercontent.com/28029685/133736839-7230ed25-d599-47d0-87f3-548894398f2e.png)
+![CALENDAR_ALL](https://user-images.githubusercontent.com/28029685/134292930-ea7d80b2-72e0-4210-a919-8f76181d9a0e.gif)
 <br>
 <br>
 <br>
