@@ -26,8 +26,6 @@ const ColorList = styled.ul`
 `
 
 const SelectOption = ({ setBgColor }) => {
-  const dispatch = useDispatch()
-  const { nowDay } = useSelector((state) => state)
   const [colorSelect, setColorSelect] = useState(null)
 
   const bgColorObj = {

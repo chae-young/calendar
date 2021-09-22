@@ -74,5 +74,6 @@ const DayList = ({ post, onClickPop, select, ...obj }) => {
 DayList.propTypes = {
   post: PropTypes.object.isRequired,
   onClickPop: PropTypes.func.isRequired,
+  select: PropTypes.func.isRequired,
 }
 export default DayList

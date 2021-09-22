@@ -39,7 +39,7 @@ const PopupTitle = styled.p`
   padding: 1rem;
   color: rgb(0, 0, 0);
 `
-const EditPopup = ({ currentList, setEditPopup, ...obj }) => {
+const EditPopup = ({ currentList, setEditPopup }) => {
   const dispatch = useDispatch()
   const { currentPost } = useSelector((state) => state)
 
